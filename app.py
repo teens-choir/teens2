@@ -4,8 +4,10 @@ from models import db, User, Music, Attendance, Message
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'your-secret-key-here'  # Change in production
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///choir.db'
+import os
+
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback-secret-key')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///choir.db')
 db.init_app(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
