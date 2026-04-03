@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html class="{% if voice_part == 'Soprano' %}soprano-theme{% else %}normal-theme{% endif %}">
+<head>
+    <title>Member Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/member.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body class="fade-in">
+    <div class="sanctuary card">
+        <h1>Your Sanctuary</h1>
+        <a href="/change_password">Change Password</a> | <a href="/logout">Logout</a>
+
+        <section class="music-rack card">
+            <h2>Music Rack</h2>
+            <div class="grid">
+                {% for music in musics %}
+                    <div class="card"><a href="{{ music.link }}">{{ music.title }}</a></div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="instruction-feed card">
+            <h2>Instruction Feed</h2>
+            <div class="scroll-list">
+                {% for msg in messages %}
+                    <div class="alert">{{ msg.timestamp }}: {{ msg.content }}</div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="attendance-progress card">
+            <h2>Attendance Progress</h2>
+            <svg width="200" height="200">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#ddd" stroke-width="10"/>
+                <circle cx="100" cy="100" r="80" fill="none" stroke="{% if voice_part == 'Soprano' %}#FF3B30{% else %}#D4AF37{% endif %}" stroke-width="10" stroke-dasharray="{{ progress * 5.026548 }} 502.654824" stroke-dashoffset="0"/>
+                <text x="100" y="105" text-anchor="middle" font-size="24">{{ progress | round(1) }}%</text>
+            </svg>
+        </section>
+    </div>
+</body>
+</html>
