@@ -1,0 +1,6 @@
+.command-center { background: rgba(0,0,0,0.8); padding: 20px; }
+h1 { color: yellow; }
+a { color: cyan; }
+section { margin-bottom: 30px; }
+#attendance-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.member-attendance
