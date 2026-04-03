@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/attendance.js') }}"></script>
+</head>
+<body class="fade-in">
+    <div class="command-center card">
+        <h1>Admin Control Tower</h1>
+        <a href="/change_password">Change Password</a> | <a href="/logout">Logout</a>
+
+        <section class="voice-assigning card">
+            <h2>Voice Part Assigning</h2>
+            <ul>
+                {% for member in members %}
+                    <li>{{ member.username }} - Current: {{ member.voice_part }}
+                        <a href="/admin/assign_voice/{{ member.id }}/Soprano">Soprano</a>
+                        <a href="/admin/assign_voice/{{ member.id }}/Alto">Alto</a>
+                        <a href="/admin/assign_voice/{{ member.id }}/Normal">Normal</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="attendance-hold card">
+            <h2>Attendance 'Hold'</h2>
+            <div id="attendance-grid">
+                {% for attendance in attendances %}
+                    <div class="member-attendance" data-user-id="{{ attendance.user_id }}">
+                        {{ User.query.get(attendance.user_id).username }}: <span class="status">{{ 'Present' if attendance.present else 'Absent' }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="divine-instructions card">
+            <h2>Divine Instructions</h2>
+            <form method="POST" action="/admin/send_message">
+                <textarea name="content" placeholder="Message" required></textarea>
+                <select name="voice_part">
+                    <option value="">All</option>
+                    <option value="Soprano">Soprano</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Normal">Normal</option>
+                </select>
+                <button type="submit">Send</button>
+            </form>
+            <ul>
+                {% for msg in messages %}
+                    <li>{{ msg.timestamp }}: {{ msg.content }} ({{ msg.voice_part or 'All' }})</li>
+                {% endfor %}
+            </ul>
+        </section>
+
+        <section class="music-stand card">
+            <h2>Music Stand Manager</h2>
+            <form method="POST" action="/admin/add_music">
+                <input type="text" name="title" placeholder="Title" required>
+                <input type="url" name="link" placeholder="Link" required>
+                <select name="voice_part" required>
+                    <option value="Soprano">Soprano</option>
+                    <option value="Alto">Alto</option>
+                    <option value="Normal">Normal</option>
+                    <option value="All">All</option>
+                </select>
+                <button type="submit">Add</button>
+            </form>
+            <ul>
+                {% for music in musics %}
+                    <li><a href="{{ music.link }}">{{ music.title }}</a> - {{ music.voice_part }}</li>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+</body>
+</html>
